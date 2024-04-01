@@ -1,7 +1,30 @@
 import logo from './logo.svg';
 import './App.css';
 
+let installPrompt = null;
+// const installButton = document.querySelector("#install");
+
+window.addEventListener("beforeinstallprompt", (event) => {
+  event.preventDefault();
+  installPrompt = event;
+  // installButton.removeAttribute("hidden");
+});
+
 function App() {
+
+  const onClick = async () => {
+    if (!installPrompt) {
+      return;
+    }
+    const result = await installPrompt.prompt();
+    console.log(`Install prompt was: ${result.outcome}`);
+    disableInAppInstallPrompt();
+  };
+
+  function disableInAppInstallPrompt() {
+    installPrompt = null;
+    // installButton.setAttribute("hidden", "");
+  }
   return (
     <div className="App">
       <header className="App-header">
@@ -9,14 +32,11 @@ function App() {
         <p>
           Edit <code>src/App.js</code> and save to reload.
         </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
+        <button
+          onClick={onClick}
         >
           Learn React
-        </a>
+        </button>
       </header>
     </div>
   );
