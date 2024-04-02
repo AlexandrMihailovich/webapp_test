@@ -3,13 +3,17 @@ import { useEffect, useState } from "react";
 
 let installPrompt = null;
 
-const installPromptRef = { current: null }
+const installPromptRef = { 
+    current: null,
+    onChange: (value) => {}
+ }
 
 window.addEventListener("beforeinstallprompt", async (event) => {
     // if (psApp) {
     event.preventDefault();
     installPrompt = event;
     installPromptRef.current = installPrompt
+    installPromptRef.onChange(installPrompt)
     console.log('installPrompt', installPrompt)
     // Update UI as appropriate
     // }
@@ -29,10 +33,12 @@ window.addEventListener("appinstalled", () => {
 });
 
 export const useInstallPrompt = () => {
-
+    const [prompt, setPromrt] = useState(null)
     useEffect(() => {
         isInstalled()
     }, [])
+
+    installPromptRef.onChange = setPromrt
 
     const getInstall = async () => {
         if (!installPromptRef.current) {
@@ -48,5 +54,5 @@ export const useInstallPrompt = () => {
         }
     }
 
-    return [installPromptRef.current, getInstall]
+    return [prompt, getInstall]
 }
