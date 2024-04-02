@@ -3,10 +3,10 @@ import { useEffect, useState } from "react";
 
 let installPrompt = null;
 
-const installPromptRef = { 
+const installPromptRef = {
     current: null,
-    onChange: (value) => {}
- }
+    onChange: (value) => { }
+}
 
 window.addEventListener("beforeinstallprompt", async (event) => {
     // if (psApp) {
@@ -34,9 +34,9 @@ window.addEventListener("appinstalled", () => {
 
 export const useInstallPrompt = () => {
     const [prompt, setPromrt] = useState(null)
-    useEffect(() => {
-        isInstalled()
-    }, [])
+    // useEffect(() => {
+    //     isInstalled()
+    // }, [])
 
     installPromptRef.onChange = setPromrt
 
@@ -48,7 +48,10 @@ export const useInstallPrompt = () => {
 
             const result = await installPromptRef.current.prompt();
             console.log(`Install prompt was: ${result.outcome}`);
-            installPromptRef.current = null;
+            if ('accepted') {
+                installPromptRef.current = null;
+                installPromptRef.onChange(null)
+            }
         } catch (error) {
             console.log('An error get Install ', error);
         }
