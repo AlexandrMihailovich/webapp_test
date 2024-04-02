@@ -3,10 +3,14 @@ import { useEffect, useState } from "react";
 
 let installPrompt = null;
 
+const installPromptRef = { current: null }
+
 window.addEventListener("beforeinstallprompt", async (event) => {
     // if (psApp) {
     event.preventDefault();
     installPrompt = event;
+    installPromptRef.current = installPrompt
+    console.log('installPrompt', installPrompt)
     // Update UI as appropriate
     // }
 });
@@ -31,18 +35,18 @@ export const useInstallPrompt = () => {
     }, [])
 
     const getInstall = async () => {
-        if (!installPrompt) {
+        if (!installPromptRef.current) {
             return;
         }
         try {
 
-            const result = await installPrompt.prompt();
+            const result = await installPromptRef.current.prompt();
             console.log(`Install prompt was: ${result.outcome}`);
-            installPrompt = null;
+            installPromptRef.current = null;
         } catch (error) {
             console.log('An error get Install ', error);
         }
     }
 
-    return [installPrompt, getInstall]
+    return [installPromptRef.current, getInstall]
 }
