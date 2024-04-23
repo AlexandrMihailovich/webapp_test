@@ -2,6 +2,11 @@ import logo from './logo.svg';
 import './App.css';
 import { useInstallPrompt } from './useInstallPrompt';
 
+const props = {
+  min: 0,
+  step: 0.05,
+  pattern: "[0-9]+([\.,][0-9]+)?"//"[0-9]{10}"
+}
 
 function App() {
 
@@ -16,6 +21,7 @@ function App() {
           install app
         </button>}
       </header>
+      <input type='text' inputMode='decimal' {...props} />
     </div>
   );
 }
